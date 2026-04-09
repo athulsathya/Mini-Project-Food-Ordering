@@ -17,9 +17,9 @@ function App() {
       children:[
         {path:'home',element:<Home/>},
         {path:'menu',element:<Menu/>},
-        {path:'contactUs',element:<Contact/>},
+        {path:'contact',element:<Contact/>},
         {path:'cart',element:<Cart/>},
-        {path:'order',element:<Orders/>},
+        {path:'orders',element:<Orders/>},
         {path:'login',element:<Login/>},
         {path:'feedback',element:<Feedback/>}
       ]
