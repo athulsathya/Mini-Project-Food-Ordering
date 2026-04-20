@@ -1,15 +1,14 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import Menu from '../components/CategoryMenu'
-import Fooditems from '../components/Fooditems'
-import CategoryMenu from '../components/CategoryMenu'
+import AppDownload from '../components/AppDownload'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
 
 function Home() {
   return (
     <div>
-        <Navbar/>
-        <CategoryMenu/>
-        <Fooditems/>
+       
+        <h1>Home page</h1>
+        <AppDownload/>
+       <Footer/>
     </div>
   )
 }

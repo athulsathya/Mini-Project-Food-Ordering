@@ -28,12 +28,10 @@ function FoodList() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-100 p-6">
 
-      {/* 🔥 Title */}
       <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">
         🍽️ Explore Delicious Food
       </h1>
 
-      {/* 🔥 Category Buttons */}
       <div className="flex justify-center gap-3 mb-10 flex-wrap">
         {["All", "Breakfast", "Snacks", "Lunch", "Dinner", "Dessert", "Beverages"].map((cat) => (
           <button
@@ -51,7 +49,6 @@ function FoodList() {
         ))}
       </div>
 
-      {/* 🔄 Loading */}
       {loading ? (
         <div className="text-center text-lg font-medium text-gray-600">
           Loading delicious food...
@@ -61,7 +58,6 @@ function FoodList() {
           No items found
         </div>
       ) : (
-        /* 🔥 Food Grid */
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {filteredFoods.map((item) => (
             <div

@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 function Layout() {
   return (
@@ -9,6 +10,7 @@ function Layout() {
 
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 py-6">
         <Outlet />
+        <Footer/>
       </main>
 
     </div>
