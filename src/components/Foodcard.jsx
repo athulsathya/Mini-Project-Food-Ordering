@@ -1,7 +1,12 @@
 import React from "react";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../redux/FoodSlice";
 
 function Foodcard({ item }) {
+  const dispatch = useDispatch();
+ 
+
   if (!item) return null;
 
   const fullStars = Math.floor(item.rating || 0);
@@ -17,9 +22,12 @@ function Foodcard({ item }) {
       />
 
       <h2 className="font-semibold mt-2">{item.name}</h2>
-      <p className="text-orange-500">₹{item.price}</p>
 
-      {/* ⭐ Rating Stars */}
+      <p className="text-orange-500">
+        ₹{item.price}
+      </p>
+
+      {/* Rating Stars */}
       <div className="flex items-center gap-1 text-yellow-500">
         {[...Array(fullStars)].map((_, i) => (
           <FaStar key={"full-" + i} />
@@ -36,10 +44,15 @@ function Foodcard({ item }) {
         </span>
       </div>
 
-      <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+      <p className="text-sm text-gray-600 mt-1">
+        {item.description}
+      </p>
 
-      <button className="mt-2 bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600">
-        Add to cart
+      <button
+        onClick={() => dispatch(addToCart(item))}
+        className="mt-2 bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600"
+      >
+        Add to Cart
       </button>
     </div>
   );

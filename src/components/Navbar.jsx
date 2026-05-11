@@ -1,9 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useSelector } from "react-redux";   // ✅ ADD THIS
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const [searchTerm,setSearchTerm]=useState("")
+
+  // 🛒 CART COUNT FROM REDUX (quantity-based)
+  const cartCount = useSelector(
+    (state) =>
+      state.cart?.addedFoods?.reduce(
+        (sum, item) => sum + (item.quantity || 1),
+        0
+      ) || 0
+  );
 
   const navItems = [
     { name: "Home", path: "/home" },
@@ -47,25 +58,28 @@ function Navbar() {
 
         {/* Right Section */}
         <div className="hidden lg:flex items-center gap-4">
-
+  
           {/* Search */}
           <div className="relative">
-            <input
-              type="search"
-              placeholder="Search food..."
-              className="w-52 pl-4 pr-10 py-2 rounded-full border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
-            />
+          <input
+  type="search"
+  placeholder="Search food..."
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  className="w-52 pl-4 pr-10 py-2 rounded-full border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm"
+/>
             <span className="absolute right-4 top-2.5 text-gray-400">🔍</span>
           </div>
 
-          {/* Cart */}
+          {/* Cart (UPDATED) */}
           <Link
             to="/cart"
             className="relative bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-full font-semibold transition"
           >
             🛒 Cart
+
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-              0
+              {cartCount}
             </span>
           </Link>
         </div>
@@ -106,13 +120,13 @@ function Navbar() {
             </Link>
           ))}
 
-          {/* Mobile Cart */}
+          {/* Mobile Cart (UPDATED) */}
           <Link
             to="/cart"
             onClick={() => setIsOpen(false)}
             className="block text-center bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition"
           >
-            🛒 View Cart
+            🛒 View Cart ({cartCount})
           </Link>
         </div>
       )}

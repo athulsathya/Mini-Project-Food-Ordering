@@ -10,15 +10,19 @@ import Privacy from "./pages/Privacy"
 import FoodList from "./components/Foodlist"
 import Header from "./components/Header"
 import Home from "./pages/Home"
+import { useState } from "react"
 
 
 function App() {
+const [category,setCategory]=useState("All")
+
   const router=createBrowserRouter([
     {
       path:'/',
       element:<Layout/>,
       children:[
         
+         { index: true, element: <Home /> },  
         {path:'/home',element:<Home/>},
         {path:'/about',element:<About/>},
         {path:'/contact',element:<Contact/>},
