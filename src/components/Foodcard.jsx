@@ -5,7 +5,6 @@ import { addToCart } from "../redux/FoodSlice";
 
 function Foodcard({ item }) {
   const dispatch = useDispatch();
- 
 
   if (!item) return null;
 
@@ -23,9 +22,7 @@ function Foodcard({ item }) {
 
       <h2 className="font-semibold mt-2">{item.name}</h2>
 
-      <p className="text-orange-500">
-        ₹{item.price}
-      </p>
+      <p className="text-orange-500">₹{item.price}</p>
 
       {/* Rating Stars */}
       <div className="flex items-center gap-1 text-yellow-500">
@@ -39,14 +36,10 @@ function Foodcard({ item }) {
           <FaRegStar key={"empty-" + i} />
         ))}
 
-        <span className="text-gray-600 ml-1 text-sm">
-          ({item.rating})
-        </span>
+        <span className="text-gray-600 ml-1 text-sm">({item.rating})</span>
       </div>
 
-      <p className="text-sm text-gray-600 mt-1">
-        {item.description}
-      </p>
+      <p className="text-sm text-gray-600 mt-1">{item.description}</p>
 
       <button
         onClick={() => dispatch(addToCart(item))}

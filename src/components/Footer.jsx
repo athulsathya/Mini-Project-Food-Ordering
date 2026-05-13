@@ -10,10 +10,8 @@ import {
 function Footer() {
   return (
     <footer className="bg-[#111111] text-gray-300 mt-16">
-      
       {/* Top Section */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-
         {/* Brand */}
         <div>
           <h2 className="text-3xl font-bold text-white">
@@ -21,9 +19,9 @@ function Footer() {
           </h2>
 
           <p className="mt-5 text-sm leading-7 text-gray-400">
-            Bringing delicious meals to your doorstep. From Breakfast to
-            Dinner, Snacks to Desserts — enjoy fresh food anytime with fast
-            delivery and premium taste.
+            Bringing delicious meals to your doorstep. From Breakfast to Dinner,
+            Snacks to Desserts — enjoy fresh food anytime with fast delivery and
+            premium taste.
           </p>
 
           {/* Social */}
@@ -46,9 +44,7 @@ function Footer() {
 
         {/* Quick Links */}
         <div>
-          <h3 className="text-white text-lg font-semibold mb-5">
-            Quick Links
-          </h3>
+          <h3 className="text-white text-lg font-semibold mb-5">Quick Links</h3>
 
           <ul className="space-y-3 text-sm">
             <li>
@@ -79,9 +75,7 @@ function Footer() {
 
         {/* Categories */}
         <div>
-          <h3 className="text-white text-lg font-semibold mb-5">
-            Categories
-          </h3>
+          <h3 className="text-white text-lg font-semibold mb-5">Categories</h3>
 
           <ul className="space-y-3 text-sm">
             <li className="hover:text-orange-400 transition cursor-pointer">
@@ -107,9 +101,7 @@ function Footer() {
 
         {/* Contact */}
         <div>
-          <h3 className="text-white text-lg font-semibold mb-5">
-            Contact Us
-          </h3>
+          <h3 className="text-white text-lg font-semibold mb-5">Contact Us</h3>
 
           <div className="space-y-3 text-sm text-gray-400">
             <p>📍 Kerala, India</p>
@@ -135,35 +127,24 @@ function Footer() {
             </div>
           </div>
         </div>
-
       </div>
 
       {/* Bottom Section */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-5 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-          
-          <p>
-            © {new Date().getFullYear()} FoodOra. All Rights Reserved.
-          </p>
+          <p>© {new Date().getFullYear()} FoodOra. All Rights Reserved.</p>
 
           <div className="flex gap-5">
-            <Link
-              to="/privacy"
-              className="hover:text-orange-400 transition"
-            >
+            <Link to="/privacy" className="hover:text-orange-400 transition">
               Privacy Policy
             </Link>
 
-            <Link
-              to="/terms"
-              className="hover:text-orange-400 transition"
-            >
+            <Link to="/terms" className="hover:text-orange-400 transition">
               Terms
             </Link>
           </div>
         </div>
       </div>
-
     </footer>
   );
 }

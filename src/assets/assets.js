@@ -1,11 +1,13 @@
 import headerImg from "./headerImg.jpg";
 import playStoreImg from "../assets/playStore.jpg";
 import appStoreImg from "../assets/appStoreImg.jpg";
+import foodDel from '../assets/foodDel.jpg'
 
 export const assets = {
   headerImg,
   playStoreImg,
   appStoreImg,
+  foodDel
 };
 
 import breakfastM from "./breakfastM.jpg";

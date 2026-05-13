@@ -1,180 +1,168 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { clearCart } from "../redux/FoodSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Orders() {
-  const dispatch = useDispatch();
-
-  const cartItems = useSelector(
-    (state) => state.cart?.addedFoods || []
-  );
-
   const [orders, setOrders] = useState([]);
+  const [form, setForm] = useState({
+    customerName: "",
+    items: "",
+    total: ""
+  });
 
+  // Load orders from localStorage
   useEffect(() => {
-    const savedOrders =
-      JSON.parse(localStorage.getItem("orders")) || [];
-    setOrders(savedOrders);
+    const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+    setOrders(storedOrders);
   }, []);
 
-  const placeOrder = () => {
-    if (cartItems.length === 0) return;
+  // Handle input changes
+  const onChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-    const total = cartItems.reduce(
-      (sum, item) =>
-        sum + (item.price || 0) * (item.quantity || 1),
-      0
-    );
+  // Add new order
+  const addOrder = (e) => {
+    e.preventDefault();
+    if (!form.customerName || !form.items || !form.total) {
+      toast.error("Please fill all fields");
+      return;
+    }
 
     const newOrder = {
       id: Date.now(),
-      items: cartItems,
-      total,
-      date: new Date().toISOString(),
-      status: "Placed",
+      customerName: form.customerName,
+      items: form.items
+        .split(",")
+        .map((item) => {
+          const [name, quantity] = item.trim().split("x");
+          return { name: name.trim(), quantity: Number(quantity) || 1 };
+        }),
+      total: Number(form.total),
+      date: new Date().toISOString()
     };
 
     const updatedOrders = [...orders, newOrder];
-
-    localStorage.setItem(
-      "orders",
-      JSON.stringify(updatedOrders)
-    );
-
+    localStorage.setItem("orders", JSON.stringify(updatedOrders));
     setOrders(updatedOrders);
-    dispatch(clearCart());
+    toast.success("Order added!");
+    setForm({ customerName: "", items: "", total: "" });
+  };
+
+  // Delete order
+  const removeOrder = (id) => {
+    const updatedOrders = orders.filter((order) => order.id !== id);
+    localStorage.setItem("orders", JSON.stringify(updatedOrders));
+    setOrders(updatedOrders);
+    toast.success("Order deleted!");
+  };
+
+  // Helper to render items
+  const renderItems = (items) => {
+    if (Array.isArray(items)) {
+      return items.map((i, idx) => (
+        <p key={idx}>
+          {i.name} x{i.quantity}
+        </p>
+      ));
+    } else if (typeof items === "object" && items !== null) {
+      return Object.entries(items).map(([name, quantity], idx) => (
+        <p key={idx}>
+          {name} x{quantity}
+        </p>
+      ));
+    } else {
+      return <p>No items</p>;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#f9f5f0] p-4">
+      <h2 className="text-2xl md:text-3xl font-bold text-center mb-6">
+        Customer Orders
+      </h2>
 
-        {/* HEADER */}
-        <h1 className="text-3xl font-bold mb-6">
-          🧾 Orders & Checkout
-        </h1>
+      {/* Add Order Form */}
+      <form
+        onSubmit={addOrder}
+        className="bg-white p-6 rounded-lg shadow mb-6 max-w-md mx-auto space-y-4"
+      >
+        <input
+          name="customerName"
+          value={form.customerName}
+          onChange={onChange}
+          placeholder="Customer Name"
+          className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#d9c7b1]"
+        />
+        <input
+          name="items"
+          value={form.items}
+          onChange={onChange}
+          placeholder="Items (e.g. Dosa x2, Tea x1)"
+          className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#d9c7b1]"
+        />
+        <input
+          name="total"
+          value={form.total}
+          onChange={onChange}
+          placeholder="Total Price"
+          type="number"
+          className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#d9c7b1]"
+        />
+        <button
+          type="submit"
+          className="w-full bg-[#d9c7b1] hover:bg-[#cbb29c] text-white py-2 rounded transition"
+        >
+          Add Order
+        </button>
+      </form>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-
-          {/* LEFT - CART */}
-          <div className="lg:col-span-2 bg-white p-5 rounded-xl shadow">
-
-            <h2 className="text-xl font-bold mb-4">
-              Current Cart
-            </h2>
-
-            {cartItems.length === 0 ? (
-              <p className="text-gray-500">
-                Your cart is empty 🍽️
-              </p>
-            ) : (
-              cartItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex justify-between py-3 border-b"
-                >
-                  <div>
-                    <p className="font-semibold">
-                      {item.name}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      ₹{item.price} × {item.quantity}
-                    </p>
-                  </div>
-
-                  <p className="font-semibold">
-                    ₹{item.price * item.quantity}
-                  </p>
-                </div>
-              ))
-            )}
-
-          </div>
-
-          {/* RIGHT - SUMMARY */}
-          <div className="bg-white p-5 rounded-xl shadow h-fit">
-
-            <h2 className="text-xl font-bold mb-4">
-              Order Summary
-            </h2>
-
-            <p className="text-gray-600 mb-4">
-              {cartItems.length} items in cart
-            </p>
-
-            <button
-              onClick={placeOrder}
-              className="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
-            >
-              Place Order
-            </button>
-
-            <p className="text-xs text-gray-400 mt-2">
-              Your order will be saved in history
-            </p>
-
-          </div>
-
+      {/* Orders List */}
+      <div className="overflow-x-auto">
+        {/* Desktop Table Header */}
+        <div className="hidden md:grid grid-cols-5 bg-[#d9c7b1] text-white font-semibold p-4 rounded-t-xl">
+          <p>Customer</p>
+          <p>Items</p>
+          <p>Total</p>
+          <p>Date</p>
+          <p>Action</p>
         </div>
 
-        {/* ORDER HISTORY */}
-        <div className="mt-10">
-
-          <h2 className="text-xl font-bold mb-4">
-            Order History
-          </h2>
-
+        <div className="divide-y divide-[#e6dcd0]">
           {orders.length === 0 ? (
-            <div className="bg-white p-6 rounded-xl shadow text-gray-500">
-              No orders yet 📦
-            </div>
+            <p className="text-center py-6 text-gray-500">No orders</p>
           ) : (
-            <div className="space-y-4">
+            orders.map((order) => (
+              <div
+                key={order.id}
+                className="grid grid-cols-1 md:grid-cols-5 gap-2 p-4 hover:bg-[#f5efe6] transition rounded-lg"
+              >
+                {/* Customer */}
+                <p className="font-medium text-[#5a4634]">{order.customerName}</p>
 
-              {orders.map((order) => (
-                <div
-                  key={order.id}
-                  className="bg-white p-5 rounded-xl shadow"
-                >
+                {/* Items */}
+                <div>{renderItems(order.items)}</div>
 
-                  {/* TOP */}
-                  <div className="flex justify-between items-center">
+                {/* Total */}
+                <p className="text-[#8b5e3c] font-semibold">₹{order.total}</p>
 
-                    <p className="font-semibold">
-                      Order #{order.id}
-                    </p>
+                {/* Date */}
+                <p className="text-gray-500 text-sm">
+                  {new Date(order.date).toLocaleString()}
+                </p>
 
-                    <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-semibold">
-                      {order.status}
-                    </span>
-
-                  </div>
-
-                  <p className="text-sm text-gray-500 mt-1">
-                    {new Date(order.date).toLocaleString()}
-                  </p>
-
-                  {/* ITEMS */}
-                  <div className="mt-3 space-y-1 text-sm text-gray-700">
-                    {order.items.map((item) => (
-                      <p key={item.id}>
-                        • {item.name} × {item.quantity}
-                      </p>
-                    ))}
-                  </div>
-
-                  {/* TOTAL */}
-                  <p className="mt-3 font-bold text-lg">
-                    Total: ₹{order.total}
-                  </p>
-
+                {/* Action */}
+                <div className="flex justify-start md:justify-center mt-2 md:mt-0">
+                  <button
+                    onClick={() => removeOrder(order.id)}
+                    className="bg-[#d9c7b1] hover:bg-[#cbb29c] text-white py-1 px-3 rounded w-full md:w-auto transition"
+                  >
+                    Delete
+                  </button>
                 </div>
-              ))}
-
-            </div>
+              </div>
+            ))
           )}
         </div>
-
       </div>
     </div>
   );

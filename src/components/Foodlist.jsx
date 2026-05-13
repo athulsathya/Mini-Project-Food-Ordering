@@ -27,13 +27,20 @@ function FoodList() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-100 p-6">
-
       <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">
         🍽️ Explore Delicious Food
       </h1>
 
       <div className="flex justify-center gap-3 mb-10 flex-wrap">
-        {["All", "Breakfast", "Snacks", "Lunch", "Dinner", "Dessert", "Beverages"].map((cat) => (
+        {[
+          "All",
+          "Breakfast",
+          "Snacks",
+          "Lunch",
+          "Dinner",
+          "Dessert",
+          "Beverages",
+        ].map((cat) => (
           <button
             key={cat}
             onClick={() => setCategory(cat)}

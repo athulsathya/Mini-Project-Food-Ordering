@@ -6,7 +6,6 @@ import Footer from "./Footer";
 function Layout() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      
       <Navbar />
 
       {/* Main Content */}
@@ -16,7 +15,6 @@ function Layout() {
 
       {/* Footer */}
       <Footer />
-
     </div>
   );
 }

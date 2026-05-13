@@ -16,7 +16,6 @@ function Header() {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 lg:px-20 w-full">
         <div className="max-w-3xl text-white">
-
           {/* Tag */}
           <p className="inline-block bg-orange-500/90 px-4 py-2 rounded-full text-sm font-semibold tracking-wide mb-5">
             Fresh • Fast • Delicious
@@ -30,9 +29,9 @@ function Header() {
 
           {/* Description */}
           <p className="mt-6 text-base sm:text-lg md:text-xl text-gray-200 leading-relaxed max-w-2xl">
-            Start your day with Breakfast, enjoy flavorful Lunch,
-            grab tasty Snacks, relax with Dinner, and complete it
-            with Desserts & Refreshing Beverages.
+            Start your day with Breakfast, enjoy flavorful Lunch, grab tasty
+            Snacks, relax with Dinner, and complete it with Desserts &
+            Refreshing Beverages.
           </p>
 
           {/* Buttons */}
@@ -73,7 +72,6 @@ function Header() {
               🥤 Beverages
             </span>
           </div>
-
         </div>
       </div>
     </section>
