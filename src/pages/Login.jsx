@@ -1,10 +1,12 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 import { toast } from "react-toastify";
 
 function Login() {
   const { login } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -13,130 +15,311 @@ function Login() {
   });
 
   const [loading, setLoading] = useState(false);
+
   const [role, setRole] = useState("user");
 
-  const onChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // Input Change
+  const onChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
+  // Login
   const onSubmit = (e) => {
     e.preventDefault();
 
     const { email, password } = form;
 
-    // Empty Fields Check
+    // Validation
     if (!email || !password) {
       toast.error("Please fill all fields");
       return;
     }
 
-    // Get Users from LocalStorage
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    // Get Users
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
     // Find User
     const user = users.find((u) => u.email === email);
 
-    // Invalid Login
+    // Invalid Credentials
     if (!user || user.password !== password) {
       toast.error("Invalid email or password");
+      return;
+    }
+
+    // Role Check
+    if (user.role !== role) {
+      toast.error(`You are not registered as ${role}`);
       return;
     }
 
     setLoading(true);
 
     setTimeout(() => {
-      // Save Login User in Context
-      login({
+      const loggedInUser = {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: role,
-      });
+        role: user.role,
+      };
 
-      toast.success("Login successful!");
+      // Save User
+      localStorage.setItem("currentUser", JSON.stringify(loggedInUser));
 
-      // Redirect Based on Role
-      navigate(role === "admin" ? "/admin" : "/home");
+      // Save Context
+      login(loggedInUser);
+
+      toast.success("Login Successful");
+
+      // Redirect
+      if (user.role === "admin") {
+        navigate("/admin/add");
+      } else {
+        navigate("/home");
+      }
 
       setLoading(false);
-    }, 700);
+    }, 800);
   };
 
   return (
     <div
-      className="relative min-h-screen flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/food-bg.jpg')" }}
+      className="
+        min-h-screen
+        flex
+        items-center
+        justify-center
+        bg-gradient-to-br
+        from-orange-100
+        via-white
+        to-orange-50
+        px-4
+      "
     >
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/50"></div>
-
-      {/* Login Form */}
-      <form
-        onSubmit={onSubmit}
-        className="relative z-10 w-full max-w-md bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow"
+      {/* Card */}
+      <div
+        className="
+          w-full
+          max-w-md
+          bg-white
+          shadow-2xl
+          rounded-3xl
+          overflow-hidden
+        "
       >
-        <h2 className="text-2xl font-bold mb-4 text-[#5a4634]">
-          Login
-        </h2>
-
-        {/* Email */}
-        <label className="block mb-2">
-          <span className="text-sm text-gray-600">Email</span>
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={onChange}
-            className="mt-1 w-full border rounded px-3 py-2 focus:outline-none"
-          />
-        </label>
-
-        {/* Password */}
-        <label className="block mb-4">
-          <span className="text-sm text-gray-600">Password</span>
-          <input
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={onChange}
-            className="mt-1 w-full border rounded px-3 py-2 focus:outline-none"
-          />
-        </label>
-
-        {/* Role Buttons */}
-        <div className="flex justify-between mb-4 gap-3">
-          <button
-            type="button"
-            onClick={() => setRole("user")}
-            className={`w-full px-4 py-2 rounded font-semibold ${
-              role === "user"
-                ? "bg-[#8b5e34] text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
+        {/* Top Section */}
+        <div
+          className="
+            bg-orange-500
+            text-white
+            text-center
+            py-8
+            px-6
+          "
+        >
+          <h1
+            className="
+              text-4xl
+              font-bold
+              tracking-wide
+            "
           >
-            User
-          </button>
+            FoodOra
+          </h1>
 
-          <button
-            type="button"
-            onClick={() => setRole("admin")}
-            className={`w-full px-4 py-2 rounded font-semibold ${
-              role === "admin"
-                ? "bg-[#8b5e34] text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
+          <p
+            className="
+              mt-2
+              text-sm
+              text-orange-100
+            "
           >
-            Admin
-          </button>
+            Fresh Food Delivered Fast
+          </p>
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          className="w-full bg-[#d9c7b1] hover:bg-[#cbb29c] text-white py-2 rounded font-semibold"
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+        {/* Form */}
+        <form onSubmit={onSubmit} className="p-8">
+          <h2
+            className="
+              text-3xl
+              font-bold
+              text-gray-800
+              text-center
+              mb-6
+            "
+          >
+            Welcome Back 👋
+          </h2>
+
+          {/* Email */}
+          <div className="mb-5">
+            <label
+              className="
+                text-sm
+                font-medium
+                text-gray-600
+              "
+            >
+              Email Address
+            </label>
+
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={onChange}
+              placeholder="Enter your email"
+              className="
+                mt-2
+                w-full
+                border
+                border-gray-200
+                rounded-xl
+                px-4
+                py-3
+                focus:outline-none
+                focus:ring-2
+                focus:ring-orange-400
+                transition
+              "
+            />
+          </div>
+
+          {/* Password */}
+          <div className="mb-5">
+            <label
+              className="
+                text-sm
+                font-medium
+                text-gray-600
+              "
+            >
+              Password
+            </label>
+
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={onChange}
+              placeholder="Enter your password"
+              className="
+                mt-2
+                w-full
+                border
+                border-gray-200
+                rounded-xl
+                px-4
+                py-3
+                focus:outline-none
+                focus:ring-2
+                focus:ring-orange-400
+                transition
+              "
+            />
+          </div>
+
+          {/* Role Selection */}
+          <div className="mb-6">
+            <p
+              className="
+                text-sm
+                font-medium
+                text-gray-600
+                mb-3
+              "
+            >
+              Login As
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setRole("user")}
+                className={`
+                  w-full
+                  py-3
+                  rounded-xl
+                  font-semibold
+                  transition
+                  ${
+                    role === "user"
+                      ? "bg-orange-500 text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-orange-100"
+                  }
+                `}
+              >
+                User
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setRole("admin")}
+                className={`
+                  w-full
+                  py-3
+                  rounded-xl
+                  font-semibold
+                  transition
+                  ${
+                    role === "admin"
+                      ? "bg-orange-500 text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-orange-100"
+                  }
+                `}
+              >
+                Admin
+              </button>
+            </div>
+          </div>
+
+          {/* Login Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="
+              w-full
+              bg-orange-500
+              hover:bg-orange-600
+              text-white
+              font-semibold
+              py-3
+              rounded-xl
+              shadow-md
+              transition
+              duration-300
+            "
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+          {/* Register */}
+          <p
+            className="
+              text-center
+              text-sm
+              text-gray-500
+              mt-6
+            "
+          >
+            Don’t have an account?{" "}
+            <Link
+              to="/register"
+              className="
+                text-orange-500
+                font-semibold
+                hover:underline
+              "
+            >
+              Register
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

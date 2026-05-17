@@ -38,7 +38,9 @@ function AdminSidebar() {
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         <div className="p-5">
-          <h2 className="text-xl font-bold mb-6 hidden md:block">Admin Panel</h2>
+          <h2 className="text-xl font-bold mb-6 hidden md:block">
+            Admin Panel
+          </h2>
 
           <div className="flex flex-col space-y-3">
             {/* Add Items */}
@@ -63,7 +65,7 @@ function AdminSidebar() {
 
             {/* Orders */}
             <NavLink
-              to="orders"
+              to="Orders"
               onClick={handleLinkClick}
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-amber-300 cursor-pointer transition"
             >

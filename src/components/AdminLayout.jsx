@@ -16,7 +16,10 @@ function AdminLayout() {
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 flex md:hidden">
-          <div className="fixed inset-0 bg-black opacity-50" onClick={() => setSidebarOpen(false)}></div>
+          <div
+            className="fixed inset-0 bg-black opacity-50"
+            onClick={() => setSidebarOpen(false)}
+          ></div>
           <div className="relative flex flex-col w-64 bg-white shadow-lg">
             <button
               className="self-end m-4 text-gray-600 hover:text-gray-800"

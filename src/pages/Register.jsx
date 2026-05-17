@@ -1,10 +1,14 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, Link } from "react-router-dom";
+
 import { toast } from "react-toastify";
+
 import { AuthContext } from "../context/AuthContext";
 
 function Register() {
   const navigate = useNavigate();
+
   const { login } = useContext(AuthContext);
 
   const [form, setForm] = useState({
@@ -15,8 +19,10 @@ function Register() {
   });
 
   const [role, setRole] = useState("user");
+
   const [loading, setLoading] = useState(false);
 
+  // Handle Input
   const onChange = (e) => {
     setForm({
       ...form,
@@ -24,6 +30,7 @@ function Register() {
     });
   };
 
+  // Register
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -45,10 +52,12 @@ function Register() {
       return;
     }
 
+    // Get Users
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
+    // Existing User Check
     const existingUser = users.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase()
+      (u) => u.email.toLowerCase() === email.toLowerCase(),
     );
 
     if (existingUser) {
@@ -56,7 +65,7 @@ function Register() {
       return;
     }
 
-    // Create New User
+    // Create User
     const newUser = {
       id: Date.now(),
       name,
@@ -74,7 +83,7 @@ function Register() {
     setTimeout(() => {
       setLoading(false);
 
-      // Auto Login after register
+      // Auto Login
       login({
         id: newUser.id,
         name: newUser.name,
@@ -82,101 +91,325 @@ function Register() {
         role: newUser.role,
       });
 
+      // Save Current User
+      localStorage.setItem("currentUser", JSON.stringify(newUser));
+
       toast.success(
-        `${role === "admin" ? "Admin" : "User"} Registered Successfully!`
+        `${role === "admin" ? "Admin" : "User"} Registered Successfully`,
       );
 
-      // Redirect by role
-      navigate(role === "admin" ? "/admin" : "/home");
+      // Redirect
+      if (role === "admin") {
+        navigate("/admin/add");
+      } else {
+        navigate("/home");
+      }
     }, 800);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form
-        onSubmit={onSubmit}
-        className="bg-white p-6 rounded-xl shadow-md w-full max-w-md"
+    <div
+      className="
+        min-h-screen
+        flex
+        items-center
+        justify-center
+        bg-gradient-to-br
+        from-orange-100
+        via-white
+        to-orange-50
+        px-4
+      "
+    >
+      {/* Card */}
+      <div
+        className="
+          w-full
+          max-w-md
+          bg-white
+          rounded-3xl
+          shadow-2xl
+          overflow-hidden
+        "
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          Register
-        </h2>
-
-        {/* Name */}
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={onChange}
-          className="w-full border p-2 mb-3 rounded"
-        />
-
-        {/* Email */}
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={onChange}
-          className="w-full border p-2 mb-3 rounded"
-        />
-
-        {/* Password */}
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={onChange}
-          className="w-full border p-2 mb-3 rounded"
-        />
-
-        {/* Confirm Password */}
-        <input
-          type="password"
-          name="confirm"
-          placeholder="Confirm Password"
-          value={form.confirm}
-          onChange={onChange}
-          className="w-full border p-2 mb-4 rounded"
-        />
-
-        {/* Role Selection */}
-        <div className="flex gap-3 mb-4">
-          <button
-            type="button"
-            onClick={() => setRole("user")}
-            className={`w-full py-2 rounded font-semibold ${
-              role === "user"
-                ? "bg-orange-500 text-white"
-                : "bg-gray-200"
-            }`}
+        {/* Top */}
+        <div
+          className="
+            bg-orange-500
+            text-white
+            text-center
+            py-8
+            px-6
+          "
+        >
+          <h1
+            className="
+              text-4xl
+              font-bold
+              tracking-wide
+            "
           >
-            User
-          </button>
+            FoodOra
+          </h1>
 
-          <button
-            type="button"
-            onClick={() => setRole("admin")}
-            className={`w-full py-2 rounded font-semibold ${
-              role === "admin"
-                ? "bg-orange-500 text-white"
-                : "bg-gray-200"
-            }`}
+          <p
+            className="
+              mt-2
+              text-sm
+              text-orange-100
+            "
           >
-            Admin
-          </button>
+            Create Your Account
+          </p>
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-green-600 text-white py-2 rounded"
-        >
-          {loading ? "Registering..." : "Register"}
-        </button>
-      </form>
+        {/* Form */}
+        <form onSubmit={onSubmit} className="p-8">
+          <h2
+            className="
+              text-3xl
+              font-bold
+              text-center
+              text-gray-800
+              mb-6
+            "
+          >
+            Join Us 🚀
+          </h2>
+
+          {/* Name */}
+          <div className="mb-4">
+            <label
+              className="
+                text-sm
+                font-medium
+                text-gray-600
+              "
+            >
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              value={form.name}
+              onChange={onChange}
+              className="
+                mt-2
+                w-full
+                border
+                border-gray-200
+                rounded-xl
+                px-4
+                py-3
+                focus:outline-none
+                focus:ring-2
+                focus:ring-orange-400
+                transition
+              "
+            />
+          </div>
+
+          {/* Email */}
+          <div className="mb-4">
+            <label
+              className="
+                text-sm
+                font-medium
+                text-gray-600
+              "
+            >
+              Email Address
+            </label>
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={form.email}
+              onChange={onChange}
+              className="
+                mt-2
+                w-full
+                border
+                border-gray-200
+                rounded-xl
+                px-4
+                py-3
+                focus:outline-none
+                focus:ring-2
+                focus:ring-orange-400
+                transition
+              "
+            />
+          </div>
+
+          {/* Password */}
+          <div className="mb-4">
+            <label
+              className="
+                text-sm
+                font-medium
+                text-gray-600
+              "
+            >
+              Password
+            </label>
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              value={form.password}
+              onChange={onChange}
+              className="
+                mt-2
+                w-full
+                border
+                border-gray-200
+                rounded-xl
+                px-4
+                py-3
+                focus:outline-none
+                focus:ring-2
+                focus:ring-orange-400
+                transition
+              "
+            />
+          </div>
+
+          {/* Confirm Password */}
+          <div className="mb-5">
+            <label
+              className="
+                text-sm
+                font-medium
+                text-gray-600
+              "
+            >
+              Confirm Password
+            </label>
+
+            <input
+              type="password"
+              name="confirm"
+              placeholder="Confirm password"
+              value={form.confirm}
+              onChange={onChange}
+              className="
+                mt-2
+                w-full
+                border
+                border-gray-200
+                rounded-xl
+                px-4
+                py-3
+                focus:outline-none
+                focus:ring-2
+                focus:ring-orange-400
+                transition
+              "
+            />
+          </div>
+
+          {/* Role */}
+          <div className="mb-6">
+            <p
+              className="
+                text-sm
+                font-medium
+                text-gray-600
+                mb-3
+              "
+            >
+              Register As
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setRole("user")}
+                className={`
+                  w-full
+                  py-3
+                  rounded-xl
+                  font-semibold
+                  transition
+                  ${
+                    role === "user"
+                      ? "bg-orange-500 text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-orange-100"
+                  }
+                `}
+              >
+                User
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setRole("admin")}
+                className={`
+                  w-full
+                  py-3
+                  rounded-xl
+                  font-semibold
+                  transition
+                  ${
+                    role === "admin"
+                      ? "bg-orange-500 text-white shadow-md"
+                      : "bg-gray-100 text-gray-700 hover:bg-orange-100"
+                  }
+                `}
+              >
+                Admin
+              </button>
+            </div>
+          </div>
+
+          {/* Register Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="
+              w-full
+              bg-orange-500
+              hover:bg-orange-600
+              text-white
+              font-semibold
+              py-3
+              rounded-xl
+              shadow-md
+              transition
+              duration-300
+            "
+          >
+            {loading ? "Registering..." : "Create Account"}
+          </button>
+
+          {/* Login Redirect */}
+          <p
+            className="
+              text-center
+              text-sm
+              text-gray-500
+              mt-6
+            "
+          >
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="
+                text-orange-500
+                font-semibold
+                hover:underline
+              "
+            >
+              Login
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

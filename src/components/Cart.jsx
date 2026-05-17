@@ -1,29 +1,34 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   increaseQty,
   decreaseQty,
   removeFromCart,
   clearCart,
+  placeOrder,
 } from "../redux/FoodSlice";
 
 function Cart() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // SAFE selector
   const addedFoods = useSelector((state) => state.cart?.addedFoods || []);
 
-  // total price
   const totalPrice = addedFoods.reduce(
     (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
     0,
   );
 
-  // total quantity
   const totalItems = addedFoods.reduce(
     (sum, item) => sum + (item.quantity || 1),
     0,
   );
+
+  const handleCheckout = () => {
+    dispatch(placeOrder());
+    navigate("/customer-orders");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -45,7 +50,6 @@ function Cart() {
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-6">
-            {/* LEFT - ITEMS */}
             <div className="flex-1 space-y-4">
               {addedFoods.map((item) => (
                 <div
@@ -54,15 +58,12 @@ function Cart() {
                 >
                   <div>
                     <h2 className="text-lg font-semibold">{item.name}</h2>
-
                     <p className="text-gray-500">₹{item.price}</p>
-
                     <p className="text-sm text-gray-400">
                       Subtotal: ₹{item.price * item.quantity}
                     </p>
                   </div>
 
-                  {/* CONTROLS */}
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => dispatch(decreaseQty(item.id))}
@@ -111,8 +112,17 @@ function Cart() {
                 Clear Cart
               </button>
 
-              <button className="w-full bg-blue-600 text-white py-2 rounded-lg">
+              <button
+                onClick={handleCheckout}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg"
+              >
                 Checkout
+              </button>
+              <button
+                onClick={handleCheckout}
+                className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition"
+              >
+                🍽️ Place Order
               </button>
             </div>
           </div>

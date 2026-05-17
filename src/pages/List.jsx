@@ -1,89 +1,161 @@
 import React, { useEffect, useState } from "react";
+import { FaTrash, FaUtensils, FaRupeeSign, FaBoxOpen } from "react-icons/fa";
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function List() {
   const [products, setProducts] = useState([]);
 
+  // Load Products
   useEffect(() => {
-    const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
-    setProducts(storedProducts);
+    loadProducts();
   }, []);
 
-  const removeFood = async (foodId) => {
-    const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
-    const updatedProducts = storedProducts.filter((item) => item.id !== foodId);
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-    setProducts(updatedProducts);
-    toast.success("Food Removed");
+  const loadProducts = () => {
+    try {
+      const data = localStorage.getItem("products");
+
+      if (!data) {
+        setProducts([]);
+        return;
+      }
+
+      const parsed = JSON.parse(data);
+
+      if (Array.isArray(parsed)) {
+        setProducts(parsed);
+      } else {
+        setProducts([]);
+      }
+    } catch (error) {
+      console.log("Error reading products:", error);
+      setProducts([]);
+    }
+  };
+
+  // Delete Product
+  const removeFood = (foodId) => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("products")) || [];
+
+      const updated = stored.filter((item) => item.id !== foodId);
+
+      localStorage.setItem("products", JSON.stringify(updated));
+
+      setProducts(updated);
+
+      toast.success("Food removed successfully!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to remove food");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#f9f5f0] py-8 px-4 sm:px-8">
-      <h2 className="text-2xl md:text-3xl font-bold text-center text-[#5a4634] mb-6">
-        All Foods List
-      </h2>
+    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+            Food Management
+          </h1>
 
-      <div className="overflow-x-auto bg-white shadow-md rounded-xl border border-[#e6dcd0]">
-        {/* Table header for desktop */}
-        <div className="hidden md:grid grid-cols-5 bg-[#d9c7b1] text-white font-semibold p-4 rounded-t-xl">
-          <p>Image</p>
-          <p>Name</p>
+          <p className="text-gray-500 mt-2">
+            Manage all food items from your dashboard
+          </p>
+        </div>
+
+        {/* TOTAL PRODUCTS */}
+        <div className="mt-5 md:mt-0 bg-orange-500 text-white px-6 py-4 rounded-2xl shadow-lg flex items-center gap-4">
+          <div className="bg-white/20 p-3 rounded-xl">
+            <FaBoxOpen className="text-2xl" />
+          </div>
+
+          <div>
+            <p className="text-sm opacity-80">Total Products</p>
+
+            <h2 className="text-2xl font-bold">{products.length}</h2>
+          </div>
+        </div>
+      </div>
+
+      {/* TABLE CARD */}
+      <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        {/* TABLE HEADER */}
+        <div className="hidden md:grid grid-cols-5 bg-gray-900 text-white px-6 py-5 font-semibold text-sm uppercase tracking-wide">
+          <p>Food Image</p>
+          <p>Food Name</p>
           <p>Category</p>
           <p>Price</p>
-          <p>Action</p>
+          <p className="text-center">Action</p>
         </div>
 
-        {/* Table rows */}
-        <div className="divide-y divide-[#e6dcd0]">
-          {products.length === 0 ? (
-            <p className="text-center py-6 text-gray-500">No products found.</p>
-          ) : (
-            products.map((item, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-1 md:grid-cols-5 items-center gap-4 p-4 hover:bg-[#f5efe6] transition rounded-lg"
-              >
-                {/* Image */}
-                <div className="flex justify-center md:justify-start mb-2 md:mb-0">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-lg border border-[#d9c7b1]"
-                  />
-                </div>
+        {/* EMPTY */}
+        {products.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="bg-orange-100 p-5 rounded-full mb-4">
+              <FaUtensils className="text-4xl text-orange-500" />
+            </div>
 
-                {/* Name */}
-                <div className="flex flex-col text-center md:text-left justify-center">
-                  <span className="font-medium text-[#5a4634]">{item.name}</span>
-                  {/* Mobile view: show category and price below name */}
-                  <div className="flex flex-col md:hidden mt-1">
-                    <span className="text-gray-600 text-sm">{item.category}</span>
-                    <span className="text-[#8b5e3c] font-semibold text-sm">
-                      ₹{item.price}
-                    </span>
-                  </div>
-                </div>
+            <h2 className="text-2xl font-bold text-gray-700">
+              No Products Found
+            </h2>
 
-                {/* Category */}
-                <p className="hidden md:block text-gray-600">{item.category}</p>
-
-                {/* Price */}
-                <p className="hidden md:block text-[#8b5e3c] font-semibold">₹{item.price}</p>
-
-                {/* Action */}
-                <div className="flex justify-center md:justify-start">
-                  <button
-                    onClick={() => removeFood(item.id)}
-                    className="bg-[#d9c7b1] hover:bg-[#cbb29c] text-white font-semibold px-4 py-2 rounded-lg shadow-sm transition w-full md:w-auto"
-                  >
-                    Delete
-                  </button>
-                </div>
+            <p className="text-gray-500 mt-2">
+              Add food products to display them here.
+            </p>
+          </div>
+        ) : (
+          products.map((item) => (
+            <div
+              key={item.id}
+              className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center px-6 py-5 border-b hover:bg-orange-50/40 transition duration-300"
+            >
+              {/* IMAGE */}
+              <div className="flex justify-center md:justify-start">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-24 h-24 object-cover rounded-2xl border shadow-sm"
+                />
               </div>
-            ))
-          )}
-        </div>
+
+              {/* NAME */}
+              <div className="text-center md:text-left">
+                <h3 className="font-bold text-gray-800 text-lg">{item.name}</h3>
+
+                <p className="text-sm text-gray-500 mt-1">
+                  Delicious fresh food item
+                </p>
+              </div>
+
+              {/* CATEGORY */}
+              <div className="flex justify-center md:justify-start">
+                <span className="bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-sm font-semibold">
+                  {item.category}
+                </span>
+              </div>
+
+              {/* PRICE */}
+              <div className="flex items-center justify-center md:justify-start gap-1 text-green-600 font-bold text-lg">
+                <FaRupeeSign />
+                {item.price}
+              </div>
+
+              {/* ACTION */}
+              <div className="flex justify-center">
+                <button
+                  onClick={() => removeFood(item.id)}
+                  className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-md transition duration-300"
+                >
+                  <FaTrash />
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

@@ -13,8 +13,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Orders from "./pages/Orders";
+import Contact from "./pages/ContactUs";
+import CustomerOrders from "./pages/CustomerOrders";
 import Privacy from "./pages/Privacy";
 import Error from "./pages/Error";
 
@@ -24,49 +24,59 @@ import FoodList from "./components/Foodlist";
 import AdminLayout from "./components/AdminLayout";
 import Add from "./pages/Add";
 import List from "./pages/List";
+import Orders from "./pages/Orders";
 
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 
-/* Root Redirect Component */
+/* Root Redirect */
 function RequireAuthRedirect() {
   const { currentUser } = useContext(AuthContext);
 
-  // Logged in user
+  // Redirect Logged In Users
   if (currentUser) {
-    return (
-      <Navigate
-        to={currentUser.role === "admin" ? "/admin" : "/home"}
-        replace
-      />
-    );
+    if (currentUser.role === "admin") {
+      return <Navigate to="/admin/add" replace />;
+    }
+
+    return <Navigate to="/home" replace />;
   }
 
-  // Guest user
-  return <Navigate to="/register" replace />;
+  // Guest Users
+  return <Navigate to="/login" replace />;
 }
 
-function App() {
+function AppRoutes() {
   const router = createBrowserRouter([
+    /* Root Redirect */
     {
       path: "/",
       element: <RequireAuthRedirect />,
     },
 
+    /* User Routes */
     {
       path: "/",
-      element: <Layout />,
+      element: (
+        <ProtectedRoute role="user">
+          <Layout />
+        </ProtectedRoute>
+      ),
+
       children: [
         { path: "home", element: <Home /> },
         { path: "about", element: <About /> },
         { path: "contact", element: <Contact /> },
         { path: "menu", element: <FoodList /> },
         { path: "cart", element: <Cart /> },
-        { path: "orders", element: <Orders /> },
+        {
+          path: "customer-orders",
+          element: <CustomerOrders />,
+        },
         { path: "privacy", element: <Privacy /> },
-        { path: "error", element: <Error /> },
       ],
     },
 
+    /* Login */
     {
       path: "/login",
       element: (
@@ -76,6 +86,7 @@ function App() {
       ),
     },
 
+    /* Register */
     {
       path: "/register",
       element: (
@@ -85,24 +96,45 @@ function App() {
       ),
     },
 
+    /* Admin Routes */
     {
       path: "/admin",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute role="admin">
           <AdminLayout />
         </ProtectedRoute>
       ),
+
       children: [
-        { path: "add", element: <Add /> },
-        { path: "list", element: <List /> },
-        { path: "orders", element: <Orders /> },
+        {
+          path: "add",
+          element: <Add />,
+        },
+        {
+          path: "list",
+          element: <List />,
+        },
+        {
+          path: "orders",
+          element: <Orders />,
+        },
       ],
+    },
+
+    /* Error Route */
+    {
+      path: "*",
+      element: <Error />,
     },
   ]);
 
+  return <RouterProvider router={router} />;
+}
+
+function App() {
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <AppRoutes />
     </AuthProvider>
   );
 }

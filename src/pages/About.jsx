@@ -7,7 +7,6 @@ function About() {
 
   return (
     <div className="bg-[#fffaf5] text-[#4b3829] overflow-hidden">
-      
       {/* Hero Section */}
       <section
         className="relative min-h-[75vh] bg-cover bg-center flex items-center"
@@ -28,8 +27,8 @@ function About() {
 
             <p className="mt-6 text-lg text-gray-200 leading-relaxed">
               From energizing breakfasts to satisfying dinners, tasty snacks,
-              refreshing beverages, and sweet desserts — FoodOra has
-              everything you crave in one place.
+              refreshing beverages, and sweet desserts — FoodOra has everything
+              you crave in one place.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
@@ -52,7 +51,6 @@ function About() {
       {/* About Story */}
       <section className="py-20 px-6 md:px-12 lg:px-20">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-center">
-
           <div>
             <p className="text-orange-500 font-semibold uppercase tracking-widest mb-3">
               Our Story
@@ -97,14 +95,12 @@ function About() {
               <p className="mt-2 text-gray-600">Fast Delivery</p>
             </div>
           </div>
-
         </div>
       </section>
 
       {/* Featured Categories */}
       <section className="py-20 bg-white px-6 md:px-12 lg:px-20">
         <div className="max-w-7xl mx-auto">
-
           <div className="text-center mb-14">
             <p className="text-orange-500 font-semibold uppercase tracking-widest mb-3">
               Our Categories
@@ -115,8 +111,8 @@ function About() {
             </h2>
 
             <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
-              Start your day with breakfast, enjoy lunch, grab snacks,
-              relax with dinner, and finish with desserts & beverages.
+              Start your day with breakfast, enjoy lunch, grab snacks, relax
+              with dinner, and finish with desserts & beverages.
             </p>
           </div>
 
@@ -137,20 +133,19 @@ function About() {
                 <div className="p-6 text-center">
                   <h3 className="text-xl font-bold">{menu.menu_name}</h3>
                   <p className="text-gray-600 mt-2">
-                    Fresh and tasty {menu.menu_name.toLowerCase()} options for you.
+                    Fresh and tasty {menu.menu_name.toLowerCase()} options for
+                    you.
                   </p>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
       {/* Why Choose Us */}
       <section className="py-20 px-6 md:px-12 lg:px-20">
         <div className="max-w-7xl mx-auto text-center">
-
           <p className="text-orange-500 font-semibold uppercase tracking-widest mb-3">
             Why FoodOra
           </p>
@@ -160,7 +155,6 @@ function About() {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
-            
             <div className="bg-white p-8 rounded-3xl shadow-md hover:shadow-xl transition">
               <h3 className="text-2xl mb-3">🍳</h3>
               <h4 className="font-bold text-xl">Meals All Day</h4>
@@ -184,7 +178,6 @@ function About() {
                 Delicious recipes made with premium ingredients.
               </p>
             </div>
-
           </div>
         </div>
       </section>
@@ -205,7 +198,6 @@ function About() {
           </button>
         </Link>
       </section>
-
     </div>
   );
 }
