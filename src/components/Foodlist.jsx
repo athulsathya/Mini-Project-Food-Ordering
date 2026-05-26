@@ -22,6 +22,7 @@ function FoodList() {
       .get("https://athulsathya.github.io/host_api2/food.json")
       .then((res) => {
         setFoods(res.data || []);
+
         setLoading(false);
       })
       .catch((err) => {
@@ -30,12 +31,15 @@ function FoodList() {
       });
   }, []);
 
-  // ✅ Filtering logic (clean + safe)
+  // ✅ Filtering logic
   let filteredFoods = foods;
 
   // Category filter
   if (category !== "All") {
-    filteredFoods = filteredFoods.filter((item) => item.category === category);
+    filteredFoods = filteredFoods.filter(
+      (item) =>
+        item?.category?.trim().toLowerCase() === category.trim().toLowerCase(),
+    );
   }
 
   // Search filter
@@ -44,7 +48,6 @@ function FoodList() {
       item?.name?.toLowerCase().includes(search.toLowerCase()),
     );
   }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-100 p-6">
       <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">
@@ -67,12 +70,14 @@ function FoodList() {
           "Snacks",
           "Lunch",
           "Dinner",
-          "Dessert",
+          "Desserts",
           "Beverages",
         ].map((cat) => (
           <button
             key={cat}
-            onClick={() => setCategory(cat)}
+            onClick={() => {
+              setCategory(cat);
+            }}
             className={`px-5 py-2 rounded-full font-medium transition-all duration-300 shadow-sm border
             ${
               category === cat

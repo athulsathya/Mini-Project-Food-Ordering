@@ -6,10 +6,9 @@ import { toast } from "react-toastify";
 function ProtectedRoute({ children, role }) {
   const { currentUser } = useContext(AuthContext);
 
-  // Show Toast Only Once
   useEffect(() => {
     if (!currentUser) {
-      toast.info("Please login to access this page");
+      toast.info("Please login first");
     }
   }, [currentUser]);
 
@@ -18,7 +17,7 @@ function ProtectedRoute({ children, role }) {
     return <Navigate to="/login" replace />;
   }
 
-  // Role Based Protection
+  // Wrong Role
   if (role && currentUser.role !== role) {
     toast.error("Access Denied");
     return <Navigate to="/login" replace />;

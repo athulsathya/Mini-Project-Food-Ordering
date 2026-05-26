@@ -27,7 +27,6 @@ import { AuthProvider, AuthContext } from "./context/AuthContext";
 function RequireAuthRedirect() {
   const { currentUser } = useContext(AuthContext);
 
-  // Redirect Logged In Users
   if (currentUser) {
     if (currentUser.role === "admin") {
       return <Navigate to="/admin/add" replace />;
@@ -36,7 +35,6 @@ function RequireAuthRedirect() {
     return <Navigate to="/home" replace />;
   }
 
-  // Guest Users
   return <Navigate to="/login" replace />;
 }
 
